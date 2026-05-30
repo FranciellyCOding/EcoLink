@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
-  Search, MapPin, Calendar, Users, Star, Filter, 
-  ChevronDown, X, Leaf, Bell, User, Menu
+  Search, MapPin, Calendar, Users, Filter, 
+  ChevronDown, X, Leaf, Bell, User, Menu, Star, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,16 +26,20 @@ export default function OportunidadesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
       {/* Header */}
-      <header className="sticky top-0 z-50 glass-effect border-b border-border">
+      <header className="sticky top-0 z-50 glass-effect-strong border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
+            <Link href="/" className="flex items-center gap-2 group">
+              <motion.div
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/20"
+              >
                 <Leaf className="w-5 h-5 text-primary-foreground" />
-              </div>
+              </motion.div>
               <span className="text-lg font-bold text-foreground font-[family-name:var(--font-poppins)] hidden sm:block">
                 Eco<span className="text-primary">Link</span>
               </span>
@@ -43,31 +47,31 @@ export default function OportunidadesPage() {
 
             {/* Search Bar - Desktop */}
             <div className="hidden md:flex flex-1 max-w-xl mx-8">
-              <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <div className="relative w-full group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input
                   type="text"
                   placeholder="Buscar oportunidades..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-10 rounded-full bg-muted border-0"
+                  className="pl-12 h-12 rounded-xl bg-muted/50 border-0 focus:bg-card focus:ring-2 focus:ring-primary/20 transition-all"
                 />
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-full hover:bg-muted transition-colors">
-                <Bell className="w-5 h-5 text-muted-foreground" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+              <button className="relative p-2.5 rounded-xl hover:bg-muted transition-all group">
+                <Bell className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-pulse" />
               </button>
               <Link href="/perfil">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center hover:from-primary/30 hover:to-accent/20 transition-all">
                   <User className="w-5 h-5 text-primary" />
                 </div>
               </Link>
               <button 
-                className="md:hidden p-2"
+                className="md:hidden p-2.5 rounded-xl hover:bg-muted transition-all"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 <Menu className="w-5 h-5" />
@@ -77,14 +81,14 @@ export default function OportunidadesPage() {
 
           {/* Search Bar - Mobile */}
           <div className="md:hidden pb-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <div className="relative group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Buscar oportunidades..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-10 rounded-full bg-muted border-0"
+                className="pl-12 h-12 rounded-xl bg-muted/50 border-0 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -93,23 +97,27 @@ export default function OportunidadesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground font-[family-name:var(--font-poppins)]">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground font-[family-name:var(--font-poppins)] tracking-tight">
             Oportunidades
           </h1>
-          <p className="text-muted-foreground mt-1">
-            {filteredOpportunities.length} oportunidades encontradas
+          <p className="text-muted-foreground mt-2">
+            {filteredOpportunities.length} oportunidades encontradas para você fazer a diferença
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
-          <aside className="lg:w-64 shrink-0">
+          <aside className="lg:w-72 shrink-0">
             {/* Mobile Filter Toggle */}
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="lg:hidden w-full mb-4 justify-between"
+              className="lg:hidden w-full mb-4 justify-between rounded-xl h-12"
             >
               <span className="flex items-center gap-2">
                 <Filter className="w-4 h-4" />
@@ -121,52 +129,69 @@ export default function OportunidadesPage() {
             {/* Filter Content */}
             <div className={`space-y-6 ${showFilters ? "block" : "hidden lg:block"}`}>
               {/* Categories */}
-              <div className="bg-card rounded-2xl p-6 border border-border">
-                <h3 className="font-semibold text-foreground mb-4">Categorias</h3>
-                <div className="space-y-2">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="card-premium rounded-2xl p-6"
+              >
+                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  Categorias
+                </h3>
+                <div className="space-y-1">
                   {categories.map((category) => (
                     <button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                         selectedCategory === category.id
-                          ? "bg-primary/10 text-primary"
-                          : "hover:bg-muted text-muted-foreground"
+                          ? "bg-gradient-to-r from-primary/10 to-accent/5 text-primary border border-primary/20"
+                          : "hover:bg-muted text-muted-foreground hover:text-foreground"
                       }`}
                     >
-                      <span className="text-sm">{category.name}</span>
+                      <span className="text-sm font-medium">{category.name}</span>
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Location Filter */}
-              <div className="bg-card rounded-2xl p-6 border border-border">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="card-premium rounded-2xl p-6"
+              >
                 <h3 className="font-semibold text-foreground mb-4">Localização</h3>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Cidade ou estado"
-                    className="pl-9 h-10 rounded-lg"
+                    className="pl-11 h-11 rounded-xl"
                   />
                 </div>
-              </div>
+              </motion.div>
 
               {/* Date Filter */}
-              <div className="bg-card rounded-2xl p-6 border border-border">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="card-premium rounded-2xl p-6"
+              >
                 <h3 className="font-semibold text-foreground mb-4">Data</h3>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {["Esta semana", "Este mês", "Próximos 3 meses", "Qualquer data"].map((option) => (
                     <button
                       key={option}
-                      className="w-full text-left px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-muted transition-colors"
+                      className="w-full text-left px-4 py-3 rounded-xl text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
                     >
                       {option}
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </aside>
 
@@ -174,16 +199,20 @@ export default function OportunidadesPage() {
           <div className="flex-1">
             {/* Active Filters */}
             {selectedCategory !== "all" && (
-              <div className="flex items-center gap-2 mb-6">
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-2 mb-6"
+              >
                 <span className="text-sm text-muted-foreground">Filtros ativos:</span>
                 <button
                   onClick={() => setSelectedCategory("all")}
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
                 >
                   {categories.find(c => c.id === selectedCategory)?.name}
-                  <X className="w-3 h-3" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
-              </div>
+              </motion.div>
             )}
 
             {/* Grid */}
@@ -196,17 +225,38 @@ export default function OportunidadesPage() {
                   transition={{ delay: index * 0.05 }}
                 >
                   <Link href={`/oportunidades/${opportunity.id}`}>
-                    <div className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/30 hover:shadow-lg transition-all group">
+                    <div className="card-interactive bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 group">
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden">
                         <Image
                           src={opportunity.image}
                           alt={opportunity.title}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#FACC15] text-foreground text-sm font-medium">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        
+                        {/* Points Badge */}
+                        <motion.div 
+                          whileHover={{ scale: 1.05 }}
+                          className="absolute top-3 right-3 px-3 py-1.5 rounded-full gradient-reward text-foreground text-sm font-bold shadow-lg"
+                        >
                           +{opportunity.points} pts
+                        </motion.div>
+
+                        {/* Organization */}
+                        <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                          <div className="relative w-8 h-8 rounded-lg overflow-hidden ring-2 ring-white/50">
+                            <Image
+                              src={opportunity.organizationLogo}
+                              alt={opportunity.organization}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <span className="text-sm text-white font-medium drop-shadow-md">
+                            {opportunity.organization}
+                          </span>
                         </div>
                       </div>
 
@@ -217,7 +267,7 @@ export default function OportunidadesPage() {
                           {opportunity.tags.slice(0, 2).map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs"
+                              className="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-medium"
                             >
                               {tag}
                             </span>
@@ -225,47 +275,41 @@ export default function OportunidadesPage() {
                         </div>
 
                         {/* Title */}
-                        <h3 className="font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                        <h3 className="font-semibold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors leading-snug">
                           {opportunity.title}
                         </h3>
 
-                        {/* Organization */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="relative w-6 h-6 rounded-full overflow-hidden">
-                            <Image
-                              src={opportunity.organizationLogo}
-                              alt={opportunity.organization}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          <span className="text-sm text-muted-foreground">
-                            {opportunity.organization}
-                          </span>
-                        </div>
-
                         {/* Meta */}
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                          <div className="flex items-center gap-1.5">
                             <MapPin className="w-4 h-4" />
                             <span>{opportunity.location}</span>
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1.5">
                             <Calendar className="w-4 h-4" />
                             <span>{opportunity.date}</span>
                           </div>
                         </div>
 
-                        {/* Participants */}
-                        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Users className="w-4 h-4" />
-                            <span>{opportunity.participants}/{opportunity.maxParticipants}</span>
+                        {/* Participants Progress */}
+                        <div className="pt-4 border-t border-border/50">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                              <Users className="w-4 h-4" />
+                              <span className="font-medium text-foreground">{opportunity.participants}</span>
+                              <span>/{opportunity.maxParticipants}</span>
+                            </div>
+                            <span className="text-xs text-muted-foreground">
+                              {Math.round((opportunity.participants / opportunity.maxParticipants) * 100)}% preenchido
+                            </span>
                           </div>
-                          <div className="w-24 h-1.5 rounded-full bg-muted overflow-hidden">
-                            <div 
+                          <div className="h-2 rounded-full bg-muted overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${(opportunity.participants / opportunity.maxParticipants) * 100}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.8, delay: index * 0.1 }}
                               className="h-full gradient-primary rounded-full"
-                              style={{ width: `${(opportunity.participants / opportunity.maxParticipants) * 100}%` }}
                             />
                           </div>
                         </div>
@@ -278,17 +322,24 @@ export default function OportunidadesPage() {
 
             {/* Empty State */}
             {filteredOpportunities.length === 0 && (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 mx-auto rounded-full bg-muted flex items-center justify-center mb-4">
-                  <Search className="w-8 h-8 text-muted-foreground" />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-20"
+              >
+                <div className="w-20 h-20 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-6">
+                  <Search className="w-10 h-10 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
+                <h3 className="text-xl font-semibold text-foreground mb-2">
                   Nenhuma oportunidade encontrada
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground mb-6">
                   Tente ajustar seus filtros ou busca
                 </p>
-              </div>
+                <Button onClick={() => { setSelectedCategory("all"); setSearchQuery(""); }} className="gradient-primary text-white">
+                  Limpar filtros
+                </Button>
+              </motion.div>
             )}
           </div>
         </div>

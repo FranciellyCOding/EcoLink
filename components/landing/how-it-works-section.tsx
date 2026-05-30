@@ -1,53 +1,60 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Search, UserPlus, CalendarCheck, Trophy, ArrowRight } from "lucide-react";
+import { Search, UserPlus, CalendarCheck, Trophy, ArrowRight, Sparkles } from "lucide-react";
 
 const steps = [
   {
     icon: UserPlus,
     title: "Crie sua Conta",
     description: "Cadastre-se gratuitamente em menos de 1 minuto e complete seu perfil de voluntário.",
-    color: "bg-primary",
+    gradient: "from-emerald-400 to-green-500",
   },
   {
     icon: Search,
     title: "Encontre Oportunidades",
     description: "Explore ações voluntárias perto de você ou online, filtradas por causa e disponibilidade.",
-    color: "bg-accent",
+    gradient: "from-teal-400 to-cyan-500",
   },
   {
     icon: CalendarCheck,
     title: "Participe e Contribua",
     description: "Inscreva-se nas ações, participe e faça a diferença na sua comunidade.",
-    color: "bg-primary",
+    gradient: "from-cyan-400 to-blue-500",
   },
   {
     icon: Trophy,
     title: "Ganhe Recompensas",
     description: "Acumule pontos, conquiste badges e troque por benefícios exclusivos.",
-    color: "bg-[#FACC15]",
+    gradient: "from-amber-400 to-yellow-500",
   },
 ];
 
 export function HowItWorksSection() {
   return (
-    <section className="py-24 bg-card">
+    <section className="py-28 bg-gradient-to-b from-card to-background overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-6"
+          >
+            <Sparkles className="w-4 h-4" />
             Simples e Intuitivo
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 font-[family-name:var(--font-poppins)]">
+          </motion.div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-5 font-[family-name:var(--font-poppins)] tracking-tight">
             Como Funciona
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Em apenas 4 passos você começa a transformar o mundo e a ser recompensado por isso
           </p>
         </motion.div>
@@ -55,44 +62,57 @@ export function HowItWorksSection() {
         {/* Steps */}
         <div className="relative">
           {/* Connection Line - Desktop */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-border -translate-y-1/2 z-0" />
+          <div className="hidden lg:block absolute top-24 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-primary/20 via-accent/20 to-[#FACC15]/20" />
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
             {steps.map((step, index) => (
               <motion.div
                 key={step.title}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.15 }}
                 className="relative"
               >
-                <div className="bg-background rounded-2xl p-6 shadow-sm border border-border hover:shadow-lg hover:border-primary/20 transition-all group">
+                <motion.div 
+                  whileHover={{ y: -8 }}
+                  className="card-premium rounded-3xl p-7 h-full"
+                >
                   {/* Step Number */}
-                  <div className="absolute -top-3 left-6">
-                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-muted text-muted-foreground text-sm font-bold">
+                  <div className="absolute -top-4 left-7">
+                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br ${step.gradient} text-white text-sm font-bold shadow-lg`}>
                       {index + 1}
                     </span>
                   </div>
 
                   {/* Icon */}
-                  <div className={`w-14 h-14 rounded-2xl ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <step.icon className="w-7 h-7 text-primary-foreground" />
-                  </div>
+                  <motion.div 
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${step.gradient} flex items-center justify-center mb-5 shadow-lg`}
+                  >
+                    <step.icon className="w-8 h-8 text-white" />
+                  </motion.div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-semibold text-foreground mb-2 font-[family-name:var(--font-poppins)]">
+                  <h3 className="text-xl font-bold text-foreground mb-3 font-[family-name:var(--font-poppins)]">
                     {step.title}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {step.description}
                   </p>
-                </div>
+                </motion.div>
 
-                {/* Arrow - Mobile/Tablet */}
+                {/* Arrow connector - between cards on desktop */}
                 {index < steps.length - 1 && (
-                  <div className="hidden sm:flex lg:hidden absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 items-center justify-center">
-                    <ArrowRight className="w-5 h-5 text-muted-foreground rotate-90" />
+                  <div className="hidden lg:flex absolute top-24 -right-4 w-8 h-8 items-center justify-center z-20">
+                    <motion.div
+                      initial={{ x: -5 }}
+                      animate={{ x: 5 }}
+                      transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
+                    >
+                      <ArrowRight className="w-5 h-5 text-primary/50" />
+                    </motion.div>
                   </div>
                 )}
               </motion.div>
