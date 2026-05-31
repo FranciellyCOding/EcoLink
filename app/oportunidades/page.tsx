@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, MapPin, Calendar, Users, Filter, 
-  ChevronDown, X, Leaf, Bell, User, Menu, Star, Sparkles
+  ChevronDown, X, Leaf, Bell, User, Menu, Star, Sparkles,
+  Award, Gift
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,42 @@ export default function OportunidadesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setNotificationsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const mockNotifications = [
+    { id: 1, type: "points", title: "Você ganhou +50 pontos", description: "Participação no plantio de árvores confirmada", time: "Há 5 min", unread: true },
+    { id: 2, type: "opportunity", title: "Nova oportunidade disponível", description: "Coleta de resíduos na Praia do Campeche", time: "Há 1 hora", unread: true },
+    { id: 3, type: "confirmation", title: "Sua participação foi confirmada", description: "Aulas de Reforço Escolar - 20 Jun", time: "Há 3 horas", unread: true },
+    { id: 4, type: "badge", title: "Novo badge desbloqueado!", description: "Você conquistou o badge 'Protetor dos Mares'", time: "Há 1 dia", unread: false },
+    { id: 5, type: "reward", title: "Recompensa disponível para resgate", description: "Você tem pontos suficientes para o Cupom Natura", time: "Há 2 dias", unread: false },
+  ];
+
+  const notificationIcons: Record<string, React.ReactNode> = {
+    points: <Star className="w-4 h-4 text-amber-500" />,
+    opportunity: <Sparkles className="w-4 h-4 text-primary" />,
+    confirmation: <Calendar className="w-4 h-4 text-teal-500" />,
+    badge: <Award className="w-4 h-4 text-purple-500" />,
+    reward: <Gift className="w-4 h-4 text-rose-500" />,
+  };
+
+  const notificationColors: Record<string, string> = {
+    points: "bg-amber-500/10",
+    opportunity: "bg-primary/10",
+    confirmation: "bg-teal-500/10",
+    badge: "bg-purple-500/10",
+    reward: "bg-rose-500/10",
+  };
 
   const filteredOpportunities = mockOpportunities.filter((opp) => {
     const matchesSearch = opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -61,10 +98,95 @@ export default function OportunidadesPage() {
 
             {/* Actions */}
             <div className="flex items-center gap-3">
-              <button className="relative p-2.5 rounded-xl hover:bg-muted transition-all group">
-                <Bell className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-pulse" />
-              </button>
+              <div className="relative" ref={notificationRef}>
+                <button 
+                  className="relative p-2.5 rounded-xl hover:bg-muted transition-all group"
+                  onClick={() => setNotificationsOpen(!notificationsOpen)}
+                >
+                  <Bell className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-pulse" />
+                </button>
+
+                <AnimatePresence>
+                  {notificationsOpen && (
+                    <>
+                      {/* Mobile backdrop */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 sm:hidden"
+                        onClick={() => setNotificationsOpen(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-card rounded-2xl shadow-2xl border border-border/50 overflow-hidden z-50"
+                      >
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground font-[family-name:var(--font-poppins)]">Notificações</h3>
+                            <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                              {mockNotifications.filter(n => n.unread).length}
+                            </span>
+                          </div>
+                          <button 
+                            className="text-xs text-primary hover:text-primary/80 font-medium transition-colors"
+                            onClick={() => setNotificationsOpen(false)}
+                          >
+                            Marcar todas como lidas
+                          </button>
+                        </div>
+
+                        {/* Notification List */}
+                        <div className="max-h-[380px] overflow-y-auto">
+                          {mockNotifications.map((notification, index) => (
+                            <motion.div
+                              key={notification.id}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                              className={`flex items-start gap-3 px-5 py-4 hover:bg-muted/50 transition-colors cursor-pointer border-b border-border/30 last:border-b-0 ${
+                                notification.unread ? "bg-primary/[0.03]" : ""
+                              }`}
+                            >
+                              <div className={`w-10 h-10 rounded-xl ${notificationColors[notification.type]} flex items-center justify-center shrink-0 mt-0.5`}>
+                                {notificationIcons[notification.type]}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2">
+                                  <p className={`text-sm leading-snug ${notification.unread ? "font-semibold text-foreground" : "font-medium text-muted-foreground"}`}>
+                                    {notification.title}
+                                  </p>
+                                  {notification.unread && (
+                                    <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                                  {notification.description}
+                                </p>
+                                <p className="text-xs text-muted-foreground/70 mt-1">
+                                  {notification.time}
+                                </p>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-5 py-3 border-t border-border/50 bg-muted/30">
+                          <button className="w-full text-center text-sm text-primary hover:text-primary/80 font-medium transition-colors py-1">
+                            Ver todas as notificações
+                          </button>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
               <Link href="/perfil">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center hover:from-primary/30 hover:to-accent/20 transition-all">
                   <User className="w-5 h-5 text-primary" />

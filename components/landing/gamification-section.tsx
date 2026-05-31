@@ -11,6 +11,14 @@ const levels = [
   { level: 20, name: "Guardião", points: 10000, icon: "🏔️", color: "from-teal-300 to-cyan-300", progress: 0 },
 ];
 
+const formatPoints = (points: number) => {
+  if (points >= 1000) {
+    const str = points.toString();
+    return str.slice(0, -3) + "." + str.slice(-3);
+  }
+  return points.toString();
+};
+
 const badges = [
   { name: "Primeiro Passo", icon: Star, description: "Complete sua primeira ação", color: "from-amber-400 to-yellow-500", earned: true },
   { name: "Guardião Verde", icon: Sparkles, description: "Plante 10 árvores", color: "from-emerald-400 to-green-500", earned: true },
@@ -21,10 +29,12 @@ const badges = [
 ];
 
 const pointActions = [
-  { action: "Completar uma ação", points: "50-250", icon: Target },
-  { action: "Convidar um amigo", points: "100", icon: Gift },
-  { action: "Avaliação positiva", points: "25", icon: Star },
-  { action: "Streak semanal", points: "50", icon: Flame },
+  { action: "Completar uma ação", points: "50-250", icon: Target, description: "Participe de ações voluntárias e ganhe pontos por cada atividade concluída" },
+  { action: "Convidar um amigo", points: "100", icon: Gift, description: "Traga amigos para a plataforma e ganhe bônus de indicação" },
+  { action: "Avaliação positiva", points: "25", icon: Star, description: "Receba uma avaliação 5 estrelas de uma organização parceira" },
+  { action: "Streak semanal", points: "50", icon: Flame, description: "Mantenha uma sequência de participação toda semana" },
+  { action: "Conquistar badge", points: "75", icon: Award, description: "Desbloqueie badges por marcos especiais e conquistas" },
+  { action: "Subir de nível", points: "200", icon: TrendingUp, description: "Ganhe bônus extra cada vez que avançar para um novo nível" },
 ];
 
 export function GamificationSection() {
@@ -107,7 +117,7 @@ export function GamificationSection() {
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">
-                      {level.points.toLocaleString()} pontos para desbloquear
+                      {formatPoints(level.points)} pontos para desbloquear
                     </p>
                     {/* Progress bar */}
                     <div className="h-1.5 rounded-full bg-muted overflow-hidden">
@@ -215,42 +225,69 @@ export function GamificationSection() {
           </motion.div>
         </div>
 
-        {/* Points Guide */}
+        {/* Points Guide — How to Earn Points */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-12 relative overflow-hidden"
+          className="mt-16 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-[#FACC15]/5 rounded-3xl" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.03)_1px,transparent_1px)] bg-[size:40px_40px] rounded-3xl" />
           
           <div className="relative p-8 sm:p-10">
-            <div className="text-center mb-10">
-              <h3 className="text-2xl font-bold text-foreground font-[family-name:var(--font-poppins)]">
+            <div className="text-center mb-12">
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-4"
+              >
+                <Sparkles className="w-4 h-4" />
+                Formas de Ganhar
+              </motion.div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-foreground font-[family-name:var(--font-poppins)] tracking-tight">
                 Como ganhar pontos
               </h3>
-              <p className="text-muted-foreground mt-2">Várias formas de acumular e subir de nível</p>
+              <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
+                Várias formas de acumular pontos, subir de nível e desbloquear recompensas exclusivas
+              </p>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {pointActions.map((item, index) => (
                 <motion.div
                   key={item.action}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.08 }}
                   whileHover={{ y: -4 }}
-                  className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 text-center border border-border/50 hover:border-primary/30 transition-all hover:shadow-lg"
+                  className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 border border-border/50 hover:border-primary/30 transition-all hover:shadow-lg group"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="w-6 h-6 text-primary" />
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
+                      <item.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-foreground text-sm">{item.action}</h4>
+                        <span
+                          className="text-lg font-bold font-[family-name:var(--font-poppins)] shrink-0 ml-2"
+                          style={{
+                            backgroundImage: "linear-gradient(135deg, #22C55E 0%, #14B8A6 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            backgroundClip: "text",
+                          }}
+                        >
+                          +{item.points}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+                    </div>
                   </div>
-                  <p className="text-3xl font-bold text-transparent bg-clip-text gradient-primary font-[family-name:var(--font-poppins)]">
-                    +{item.points}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.action}</p>
                 </motion.div>
               ))}
             </div>

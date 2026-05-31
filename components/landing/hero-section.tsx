@@ -80,29 +80,32 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1] mb-6 font-[family-name:var(--font-poppins)] text-balance tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.08] mb-6 font-[family-name:var(--font-poppins)] tracking-tight"
             >
-              Transforme o mundo,{" "}
-              <span className="relative">
-                <span className="text-transparent bg-clip-text gradient-primary">
-                  uma ação de cada vez
-                </span>
-                <motion.svg
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ delay: 1, duration: 0.8 }}
-                  className="absolute -bottom-2 left-0 w-full h-3 text-primary/30"
-                  viewBox="0 0 200 10"
-                  fill="none"
+              <span className="block">Pequenas{" "}
+                <span
+                  style={{
+                    backgroundImage: "linear-gradient(135deg, #22C55E 0%, #14B8A6 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
                 >
-                  <path
-                    d="M2 8 Q 50 2, 100 5 T 198 3"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
+                  ações
+                </span>
+                {" "}podem
               </span>
+              <span className="block">gerar grandes</span>
+              <span
+                  style={{
+                    backgroundImage: "linear-gradient(135deg, #22C55E 20%, #14B8A6 80%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  transformações.
+                </span>
             </motion.h1>
 
             {/* Description */}
